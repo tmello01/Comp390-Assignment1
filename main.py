@@ -6,8 +6,18 @@ from errors import LocationError, CurrentForecastError, QuotaReachedError
 from url_factory import create_location_url
 
 config = configparser.ConfigParser()
-config.read("app.config")
-key = config["secrets"]["Key"]
+
+try:
+    config.read("app.config")
+    key = config["secrets"]["Key"]
+except KeyError as ke:
+    print(f"I'm sorry! We could not find the API Key. Please set the [secrets] 'Key' section in the app.config and try again!")
+    exit(1)
+except Exception as e: #handle any other exception we're not sure of. 
+    print("I'm sorry! Something went wrong trying to read the config file. Please try again!")
+    print(e)
+    raise
+
 
 def main():
     try:
